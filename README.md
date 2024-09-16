@@ -1,7 +1,12 @@
 # Superbird Clock
 
 Simple Clock for Spotify&ttrade; Car Thing
-**TODO: Add description**
+
+## CI Artifacts
+
+[!WARNING]
+This repository includes to login via `ssh` and perform uploads using the password `superbird`. After provisioning and testing, you should
+rebuild and upload in order to secure your device.
 
 ## Targets
 
