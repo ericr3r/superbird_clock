@@ -7,6 +7,8 @@ jobs:
      ELIXIR-VERSION: v1.17.2-otp-27
      NERVES_BOOTSTRAP_VERSION:  1.13.0
     runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,14 +26,18 @@ jobs:
       - name: Install nerves_bootstrap
         run: |
           mix archive.install --force hex nerves_bootstrap ${{ env.NERVES_BOOTSTRAP_VERSION }}
-      - name: Configure git urls
+      - name: Set version
+        id: set_version
         run: |
-          git config --global url."https://github.com/".insteadOf git@github.com
+          VERSION=$(git describe --tags --always --dirty | sed 's/^v//')
+          echo "VERSION=$"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "::set-output name=version::$VERSION"
       - name: Build
         run: |
           mkdir -p ./deploy/artifacts
           CI_BUILD=true MIX_TARGET=superbird mix deps.get
-          CI_BUILD=true MIX_TARGET=superbird mix firmware --output "deploy/artifacts/clock-${{ github.ref_name }}.fw"
+          CI_BUILD=true MIX_TARGET=superbird mix firmware --output "deploy/artifacts/clock-${{ env.VERSION }}.fw"
   upload-artifacts:
       needs: [build]
       runs-on: ubuntu-22.04
