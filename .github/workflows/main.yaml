@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir -p ./deploy/artifacts
           CI_BUILD=true MIX_TARGET=superbird mix deps.get
-          CI_BUILD=true MIX_TARGET=superbird mix firmware --output "deploy/artifacts/clock-${{ github.ref }}.fw"
+          CI_BUILD=true MIX_TARGET=superbird mix firmware --output "deploy/artifacts/clock-${{ github.ref_name }}.fw"
   upload-artifacts:
       needs: [build]
       runs-on: ubuntu-22.04
