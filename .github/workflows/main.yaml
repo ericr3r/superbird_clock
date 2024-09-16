@@ -1,0 +1,50 @@
+name: Firmware image generation
+on: [push]
+jobs:
+  build:
+    env:
+     OTP-VERSION: OTP-27.0.1
+     ELIXIR-VERSION: v1.17.2-otp-27
+     NERVES_BOOTSTRAP_VERSION:  1.13.0
+    runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install packages
+        run: |
+          sudo apt-get update
+          sudo apt install build-essential automake autoconf git squashfs-tools pkgconf curl libmnl-dev -y
+          wget https://github.com/fwup-home/fwup/releases/download/v1.10.2/fwup_1.10.2_amd64.deb
+          sudo dpkg -i fwup_1.10.2_amd64.deb
+      - name: Setup beam
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ env.OTP-VERSION }}
+          elixir-version: ${{ env.ELIXIR-VERSION }}
+      - name: Install nerves_bootstrap
+        run: |
+          mix archive.install --force hex nerves_bootstrap ${{ env.NERVES_BOOTSTRAP_VERSION }}
+      - name: Set version
+        id: set_version
+        run: |
+          VERSION=$(git describe --tags --always --dirty | sed 's/^v//')
+          echo "VERSION=$"
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "::set-output name=version::$VERSION"
+      - name: Build
+        run: |
+          mkdir -p ./deploy/artifacts
+          CI_BUILD=true MIX_TARGET=superbird mix deps.get
+          CI_BUILD=true MIX_TARGET=superbird mix firmware --output "deploy/artifacts/clock-${{ env.VERSION }}.fw"
+      - name: Upload Artifacts
+        if: contains(github.ref, 'tags')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: deploy/artifacts/*
+          file_glob: true
+          tag: ${{ github.ref }}
+

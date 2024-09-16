@@ -24,24 +24,33 @@ config :nerves, :erlinit, update_clock: true
 # * See https://hexdocs.pm/nerves_ssh/readme.html for general SSH configuration
 # * See https://hexdocs.pm/ssh_subsystem_fwup/readme.html for firmware updates
 
+allow_password_login = System.get_env("CI_BUILD") == "true"
+
 keys =
   System.user_home!()
-  |> Path.join(".ssh/id_{rsa,ecdsa,ed25519}.pub")
+  |> Path.join(".ssh/id_{rsa,ecdsa,ed25519,rsa_yubikey}.pub")
   |> Path.wildcard()
 
-# if keys == [],
-#   do:
-#     Mix.raise("""
-#     No SSH public keys found in ~/.ssh. An ssh authorized key is needed to
-#     log into the Nerves device and update firmware on it using ssh.
-#     See your project's config.exs for this error message.
-#     """)
+if keys == [] && !allow_password_login,
+  do:
+    Mix.raise("""
+    No SSH public keys found in ~/.ssh. An ssh authorized key is needed to
+    log into the Nerves device and update firmware on it using ssh.
+    See your project's config.exs for this error message.
+    """)
+
+daemon_option_overrides =
+  if allow_password_login do
+    [
+      {:pwdfun, &SuperbirdClock.ssh_check_pass/2},
+      {:auth_method_kb_interactive_data, &SuperbirdClock.ssh_show_prompt/3}
+    ]
+  else
+    []
+  end
 
 config :nerves_ssh,
-  daemon_option_overrides: [
-    {:pwdfun, &SuperbirdClock.ssh_check_pass/2},
-    {:auth_method_kb_interactive_data, &SuperbirdClock.ssh_show_prompt/3}
-  ],
+  daemon_option_overrides: daemon_option_overrides,
   authorized_keys: Enum.map(keys, &File.read!/1)
 
 # Configure the network using vintage_net
