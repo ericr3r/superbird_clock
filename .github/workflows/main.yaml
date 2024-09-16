@@ -31,6 +31,7 @@ jobs:
         run: |
           VERSION=$(git describe --tags --always --dirty | sed 's/^v//')
           echo "VERSION=$"
+          echo "VERSION=$VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "::set-output name=version::$VERSION"
       - name: Build
@@ -38,10 +39,6 @@ jobs:
           mkdir -p ./deploy/artifacts
           CI_BUILD=true MIX_TARGET=superbird mix deps.get
           CI_BUILD=true MIX_TARGET=superbird mix firmware --output "deploy/artifacts/clock-${{ env.VERSION }}.fw"
-  upload-artifacts:
-      needs: [build]
-      runs-on: ubuntu-22.04
-      steps:
       - name: Upload Artifacts
         if: contains(github.ref, 'tags')
         uses: svenstaro/upload-release-action@v2
