@@ -4,9 +4,9 @@ Simple Clock for Spotify&ttrade; Car Thing
 
 ## CI Artifacts
 
-[!WARNING]
-This repository includes to login via `ssh` and perform uploads using the password `superbird`. After provisioning and testing, you should
-rebuild and upload in order to secure your device.
+> [!WARNING]
+> The release artifacts in this repository allow ssh login with a static password of `superbird`. After provisioning and testing, you should
+> rebuild locally and upload in order to secure your device.
 
 ## Targets
 
