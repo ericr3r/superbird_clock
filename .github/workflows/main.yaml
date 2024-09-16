@@ -29,9 +29,9 @@ jobs:
           git config --global url."https://github.com/".insteadOf git@github.com
       - name: Build
         run: |
-          mkdir -p deploy/artifacts
+          mkdir -p ./deploy/artifacts
           MIX_TARGET=superbird mix deps.get
-          MIX_TARGET=superbird mix firmware --output deploy/artifacts
+          MIX_TARGET=superbird mix firmware --output "deploy/artifacts/clock-${{ github.ref }}.fw"
       - name: Upload Artifacts
         if: contains(github.ref, 'tags')
         uses: svenstaro/upload-release-action@v2
