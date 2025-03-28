@@ -3,8 +3,8 @@ on: [push]
 jobs:
   build:
     env:
-     OTP-VERSION: OTP-27.0.1
-     ELIXIR-VERSION: v1.17.2-otp-27
+     OTP-VERSION: OTP-27.3
+     ELIXIR-VERSION: v1.18.3-otp-27
      NERVES_BOOTSTRAP_VERSION:  1.13.0
     runs-on: ubuntu-22.04
     outputs:
