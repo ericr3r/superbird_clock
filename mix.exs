@@ -54,7 +54,7 @@ defmodule SuperbirdClock.MixProject do
       # changes to your application are needed.
       {:nerves_system_superbird,
        github: "ericr3r/nerves_system_superbird",
-       tag: "v1.28.2",
+       tag: "v1.30.0",
        runtime: false,
        targets: :superbird},
       {:scenic,

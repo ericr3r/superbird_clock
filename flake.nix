@@ -7,14 +7,18 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+  }:
+    flake-utils.lib.eachDefaultSystem (
+      system: let
         pkgs = import nixpkgs {
           inherit system;
         };
         erlangVersion = "erlang_27";
-        elixirVersion = "elixir_1_17";
+        elixirVersion = "elixir_1_18";
 
         erlang = pkgs.beam.interpreters.${erlangVersion};
         elixir = pkgs.beam.packages.${erlangVersion}.${elixirVersion};
@@ -24,7 +28,6 @@
           erlang
           pkgs.pkg-config
         ];
-
 
         supportPkgs = with pkgs; [
           atk
@@ -90,18 +93,17 @@
         scenic = pkgs.buildFHSUserEnv {
           name = "fhs-shell";
           linkLibs = true;
-          extraOutputsToInstall = [ "dev" ];
+          extraOutputsToInstall = ["dev"];
           targetPkgs = pkgs: commonPkgs ++ supportPkgs;
           runScript = pkgs.writeScript "init.sh" ''
             unset MIX_TARGET
             export FHS=true
             export SCENIC_LOCAL_TARGET=cairo-gtk
             export PKG_CONFIG_PATH=${pkgs.xorg.xorgproto}/share/pkgconfig:/usr/lib/pkgconfig
-            exec zsh 
+            exec zsh
           '';
         };
-      in
-      {
+      in {
         devShells.scenic = scenic.env;
       }
     );
