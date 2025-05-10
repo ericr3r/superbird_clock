@@ -37,6 +37,7 @@ defmodule SuperbirdClock.MixProject do
       {:ring_logger, "~> 0.11.0"},
       {:toolshed, "~> 0.4.0"},
       {:scenic_clock, "~> 0.11.0"},
+      {:hap, "~> 0.6.0"},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
@@ -54,7 +55,7 @@ defmodule SuperbirdClock.MixProject do
       # changes to your application are needed.
       {:nerves_system_superbird,
        github: "ericr3r/nerves_system_superbird",
-       tag: "v1.30.0",
+       tag: "v1.31.0",
        runtime: false,
        targets: :superbird},
       {:scenic,
