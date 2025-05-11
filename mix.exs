@@ -38,6 +38,11 @@ defmodule SuperbirdClock.MixProject do
       {:toolshed, "~> 0.4.0"},
       {:scenic_clock, "~> 0.11.0"},
       {:hap, "~> 0.6.0"},
+      {:scenic,
+       git: "https://github.com/ScenicFramework/scenic.git", branch: "main", override: true},
+      {:truetype_metrics, "~> 0.5", runtime: false},
+      {:ex_image_info, "~> 0.2.4", runtime: false},
+      {:dialyxir, "~> 1.1", only: :dev, runtime: false},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
@@ -58,11 +63,7 @@ defmodule SuperbirdClock.MixProject do
        tag: "v1.31.0",
        runtime: false,
        targets: :superbird},
-      {:scenic,
-       git: "https://github.com/ScenicFramework/scenic.git", branch: "main", override: true},
-      {:truetype_metrics, "~> 0.5", runtime: false},
-      {:ex_image_info, "~> 0.2.4", runtime: false},
-      {:dialyxir, "~> 1.1", only: :dev, runtime: false}
+       {:nerves_motd, "~> 0.1.15", targets: :superbird}
     ]
   end
 

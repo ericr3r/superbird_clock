@@ -37,14 +37,18 @@ defmodule SuperbirdClock.Application do
 
   defp children(_target) do
     accessory_server = %HAP.AccessoryServer{
-      name: "My HAP Superbird Device",
+      name: "Superbird Clock",
       identifier: "11:22:33:44:55:66",
-      accessory_type: 5,
+      accessory_type: 5,  # Clock accessory type
       accessories: [
         %HAP.Accessory{
-          name: "My HAP Simulated Lightbulb",
+          name: "Superbird Clock",
           services: [
-            %HAP.Services.LightBulb{on: {Screen}}
+            %HAP.Services.LightBulb{
+              on: {Screen, :on_off },
+              # brightness: {Screen},
+              name: "Display Brightness"
+            }
           ]
         }
       ]
@@ -54,6 +58,9 @@ defmodule SuperbirdClock.Application do
     # Starts a worker by calling: SuperbirdClock.Worker.start_link(arg)
     # {SuperbirdClock.Worker, arg},
     # {}
-    [{HAP, accessory_server}]
+    [
+      {SuperbirdClock.Screen, []},
+      {HAP, accessory_server}
+    ]
   end
 end
