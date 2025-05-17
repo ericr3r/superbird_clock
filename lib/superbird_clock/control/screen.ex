@@ -10,6 +10,10 @@ defmodule SuperbirdClock.Control.Screen do
     end
   end
 
+  def set_brightness(value) when value < 0, do: set_brightness(0)
+
+  def set_brightness(value) when value > 100, do: set_brightness(100)
+
   def set_brightness(value) do
     Logger.debug("Set Brightness #{value}")
 
@@ -17,6 +21,10 @@ defmodule SuperbirdClock.Control.Screen do
       get_brightness()
     end
   end
+
+  def decrease(), do: set_brightness(get_brightness() - 10)
+
+  def increase(), do: set_brightness(get_brightness() + 10)
 
   def toggle(last) do
     toggle(get_brightness(), last)
