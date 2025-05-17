@@ -5,7 +5,7 @@ defmodule SuperbirdClock.Application do
 
   use Application
 
-  alias SuperbirdClock.Screen
+  alias SuperbirdClock.Control.Buttons
 
   @impl true
   def start(_type, _args) do
@@ -36,31 +36,31 @@ defmodule SuperbirdClock.Application do
   end
 
   defp children(_target) do
-    accessory_server = %HAP.AccessoryServer{
-      name: "Superbird Clock",
-      identifier: "11:22:33:44:55:66",
-      accessory_type: 5,  # Clock accessory type
-      accessories: [
-        %HAP.Accessory{
-          name: "Superbird Clock",
-          services: [
-            %HAP.Services.LightBulb{
-              on: {Screen, :on_off },
-              # brightness: {Screen},
-              name: "Display Brightness"
-            }
-          ]
-        }
-      ]
-    }
+    # accessory_server = %HAP.AccessoryServer{
+    #   name: "Superbird Clock",
+    #   identifier: "11:22:33:44:55:66",
+    #   accessory_type: 5,  # Clock accessory type
+    #   accessories: [
+    #     %HAP.Accessory{
+    #       name: "Superbird Clock",
+    #       services: [
+    #         %HAP.Services.LightBulb{
+    #           on: {Screen, :on_off },
+    #           # brightness: {Screen},
+    #           name: "Display Brightness"
+    #         }
+    #       ]
+    #     }
+    #   ]
+    # }
 
     # Children for all targets except host
     # Starts a worker by calling: SuperbirdClock.Worker.start_link(arg)
     # {SuperbirdClock.Worker, arg},
     # {}
     [
-      {SuperbirdClock.Screen, []},
-      {HAP, accessory_server}
+      # {HAP, accessory_server}
+      {Buttons, []}
     ]
   end
 end
