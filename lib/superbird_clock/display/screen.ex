@@ -1,4 +1,4 @@
-defmodule SuperbirdClock.Control.Screen do
+defmodule SuperbirdClock.Display.Screen do
   @sys_brightness "/sys/class/backlight/backlight/brightness"
 
   require Logger
@@ -22,9 +22,9 @@ defmodule SuperbirdClock.Control.Screen do
     end
   end
 
-  def decrease(), do: set_brightness(get_brightness() - 10)
+  def dim(), do: set_brightness(get_brightness() - 10)
 
-  def increase(), do: set_brightness(get_brightness() + 10)
+  def brighten(), do: set_brightness(get_brightness() + 10)
 
   def toggle(last) do
     toggle(get_brightness(), last)

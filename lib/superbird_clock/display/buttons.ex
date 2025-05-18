@@ -1,12 +1,11 @@
-defmodule SuperbirdClock.Control.Buttons do
+defmodule SuperbirdClock.Display.Buttons do
   require Logger
   use GenServer
 
-  alias SuperbirdClock.Control.Screen
+  alias SuperbirdClock.Display.Control
 
   defstruct buttons: nil,
-            rotary: nil,
-            last_brightness: 100
+            rotary: nil
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
@@ -24,13 +23,13 @@ defmodule SuperbirdClock.Control.Buttons do
 
   @impl GenServer
   def handle_info({:input_event, buttons, events}, %{buttons: buttons} = state) do
-    state = handle_events(events, state)
+    handle_events(events)
     {:noreply, state}
   end
 
   @impl GenServer
   def handle_info({:input_event, rotary, events}, %{rotary: rotary} = state) do
-    state = handle_events(events, state)
+    handle_events(events)
     {:noreply, state}
   end
 
@@ -60,23 +59,19 @@ defmodule SuperbirdClock.Control.Buttons do
     end
   end
 
-  defp handle_events([{:ev_key, :key_esc, 1}], %{last_brightness: last_brigthness} = state) do
-    {_current, last} = Screen.toggle(last_brigthness)
-    %__MODULE__{state | last_brightness: last}
+  defp handle_events([{:ev_key, :key_esc, 1}]) do
+    :ok = Control.toggle()
   end
 
-  defp handle_events([{:ev_rel, :rel_hwheel, 1}], state) do
-    brightness = Screen.increase()
-    %__MODULE__{state | last_brightness: brightness}
+  defp handle_events([{:ev_rel, :rel_hwheel, 1}]) do
+    :ok = Control.brighten()
   end
 
-  defp handle_events([{:ev_rel, :rel_hwheel, -1}], state) do
-    brightness = Screen.decrease()
-    %__MODULE__{state | last_brightness: brightness}
+  defp handle_events([{:ev_rel, :rel_hwheel, -1}]) do
+    :ok = Control.dim()
   end
 
-  defp handle_events(event, state) do
+  defp handle_events(event) do
     Logger.debug("Unhandled event #{inspect(event)}")
-    state
   end
 end
