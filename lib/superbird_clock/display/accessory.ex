@@ -19,7 +19,7 @@ defmodule SuperbirdClock.Display.Accessory do
     {:ok, brightness} = Control.get_brightness()
 
     if brightness > 0 do
-      {:ok, 0} = Control.toggle()
+      Control.toggle()
     end
 
     :ok
@@ -30,7 +30,7 @@ defmodule SuperbirdClock.Display.Accessory do
     {:ok, brightness} = Control.get_brightness()
 
     if brightness == 0 do
-      {:ok, _level} = Control.toggle()
+      {:ok, _level} = Control.toggle(false)
     end
 
     :ok
@@ -38,7 +38,7 @@ defmodule SuperbirdClock.Display.Accessory do
 
   @impl HAP.ValueStore
   def put_value(level, :brightness) do
-    {:ok, _brightness} = Control.set_brightness(level)
+    {:ok, _brightness} = Control.set_brightness(level, false)
     :ok
   end
 

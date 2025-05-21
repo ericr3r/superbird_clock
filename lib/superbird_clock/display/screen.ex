@@ -10,14 +10,12 @@ defmodule SuperbirdClock.Display.Screen do
     end
   end
 
-  def set_brightness(value) when value < 0, do: set_brightness(0)
+  def set_brightness(level) when level < 0, do: set_brightness(0)
 
-  def set_brightness(value) when value > 100, do: set_brightness(100)
+  def set_brightness(level) when level > 100, do: set_brightness(100)
 
-  def set_brightness(value) do
-    Logger.debug("Set Brightness #{value}")
-
-    with :ok = File.write(@sys_brightness, "#{value}") do
+  def set_brightness(level) do
+    with :ok = File.write(@sys_brightness, "#{level}") do
       get_brightness()
     end
   end
@@ -26,10 +24,10 @@ defmodule SuperbirdClock.Display.Screen do
 
   def brighten(), do: set_brightness(get_brightness() + 10)
 
-  def toggle(last) do
-    toggle(get_brightness(), last)
+  def toggle(last_on_level) do
+    toggle(get_brightness(), last_on_level)
   end
 
-  defp toggle(0, last), do: {set_brightness(last), last}
-  defp toggle(current, _), do: {set_brightness(0), current}
+  defp toggle(0, last), do: set_brightness(last)
+  defp toggle(_current, _), do: set_brightness(0)
 end

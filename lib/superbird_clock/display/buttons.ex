@@ -60,15 +60,15 @@ defmodule SuperbirdClock.Display.Buttons do
   end
 
   defp handle_events([{:ev_key, :key_esc, 1}]) do
-    :ok = Control.toggle()
+    {:ok, _} = Control.toggle()
   end
 
   defp handle_events([{:ev_rel, :rel_hwheel, 1}]) do
-    :ok = Control.brighten()
+    {:ok, _} = Control.brighten()
   end
 
   defp handle_events([{:ev_rel, :rel_hwheel, -1}]) do
-    :ok = Control.dim()
+    {:ok, _} = Control.dim()
   end
 
   defp handle_events(event) do
