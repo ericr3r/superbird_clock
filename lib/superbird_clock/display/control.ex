@@ -6,7 +6,7 @@ defmodule SuperbirdClock.Display.Control do
 
   defstruct on: true,
             last_brightness: 100,
-            change_token: nil
+            change_tokens: %{}
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
@@ -28,6 +28,10 @@ defmodule SuperbirdClock.Display.Control do
     GenServer.call(__MODULE__, {:set_brightness, level, notify_change})
   end
 
+  def set_change_token(change_token, opts) do
+    GenServer.call(__MODULE__, {:set_change_token, change_token, opts})
+  end
+
   def toggle(notify_change \\ true) do
     GenServer.call(__MODULE__, {:toggle, notify_change})
   end
@@ -40,36 +44,47 @@ defmodule SuperbirdClock.Display.Control do
   end
 
   @impl GenServer
-  def handle_call({:brighten, _notify_change}, _from, state) do
+  def handle_call({:brighten, notify_change}, _from, state) do
     current = Screen.brighten()
-    {:reply, {:ok, current}, update_state(current, state)}
+    {:reply, {:ok, current}, update_state(current, state, notify_change)}
   end
 
   @impl GenServer
-  def handle_call({:dim, _notify_chnage}, _from, state) do
+  def handle_call({:dim, notify_change}, _from, state) do
     current = Screen.dim()
-    {:reply, {:ok, current}, update_state(current, state)}
+    {:reply, {:ok, current}, update_state(current, state, notify_change)}
   end
 
   @impl GenServer
   def handle_call(:get_brightness, _from, state) do
     current = Screen.get_brightness()
-    {:reply, {:ok, current}, update_state(current, state)}
+    {:reply, {:ok, current}, update_state(current, state, false)}
   end
 
   @impl GenServer
-  def handle_call({:set_brightness, level, _notify_change}, _from, state) do
+  def handle_call({:set_brightness, level, notify_change}, _from, state) do
     Logger.debug("Set brightness #{level}")
     current = Screen.set_brightness(level)
-    {:reply, {:ok, current}, update_state(current, state)}
+    {:reply, {:ok, current}, update_state(current, state, notify_change)}
   end
 
   @impl GenServer
-  def handle_call({:toggle, _notify_change}, _from, %{last_brightness: last_brightness} = state) do
+  def handle_call(
+        {:set_change_token, change_token, opts},
+        _from,
+        %__MODULE__{change_tokens: change_tokens} = state
+      ) do
+    change_tokens = Map.put(change_tokens, opts, change_token)
+    state = %{state | change_tokens: change_tokens}
+    {:reply, :ok, state}
+  end
+
+  @impl GenServer
+  def handle_call({:toggle, notify_change}, _from, %{last_brightness: last_brightness} = state) do
     Logger.debug("Toggle Last #{last_brightness}")
     current = Screen.toggle(last_brightness)
     Logger.debug("Toggle #{current} #{last_brightness}")
-    {:reply, {:ok, current}, %__MODULE__{state | last_brightness: last_brightness}}
+    {:reply, {:ok, current}, update_state(current, state, notify_change)}
   end
 
   @impl GenServer
@@ -78,7 +93,11 @@ defmodule SuperbirdClock.Display.Control do
     {:reply, :ok, state}
   end
 
-  defp update_state(current_brightness, %__MODULE__{last_brightness: last_brightness} = state) do
+  defp update_state(
+         current_brightness,
+         %__MODULE__{on: previous_on, last_brightness: last_brightness} = state,
+         notify_change
+       ) do
     on = current_brightness > 0
 
     brightness =
@@ -87,6 +106,34 @@ defmodule SuperbirdClock.Display.Control do
         _ -> current_brightness
       end
 
+    if notify_change do
+      changed({previous_on, last_brightness}, {on, brightness}, state)
+    end
+
     %{state | on: on, last_brightness: brightness}
   end
+
+  defp changed(
+         {previous_on, previous_brightness},
+         {on, brightness},
+         %__MODULE__{change_tokens: change_tokens} =
+           _state
+       ) do
+    if previous_on != on do
+      notify(Map.get(change_tokens, :on_off))
+    end
+
+    if on && previous_brightness != brightness do
+      notify(Map.get(change_tokens, :brightness))
+    end
+
+    if !previous_on && on do
+      notify(Map.get(change_tokens, :brightness))
+    end
+  end
+
+  # skip notification for empty change token
+  defp notify(nil), do: Logger.debug("Skip notification for empty change token")
+
+  defp notify(change_token), do: HAP.value_changed(change_token)
 end

@@ -51,8 +51,8 @@ defmodule SuperbirdClock.Display.Accessory do
 
   @impl HAP.ValueStore
   def set_change_token(change_token, opts) do
-    Logger.debug("Set Change token #{inspect(change_token)}")
-    Logger.debug(inspect(opts))
+    Logger.debug("Set Change token #{inspect(change_token)} #{inspect(opts)}")
+    Control.set_change_token(change_token, opts)
     :ok
   end
 end
