@@ -5,6 +5,8 @@ defmodule SuperbirdClock.Application do
 
   use Application
 
+  alias SuperbirdClock.Display.{Accessory, Buttons, Control}
+
   @impl true
   def start(_type, _args) do
     opts = [strategy: :one_for_one, name: SuperbirdClock.Supervisor]
@@ -16,7 +18,7 @@ defmodule SuperbirdClock.Application do
         # Children for all targets
         # Starts a worker by calling: SuperbirdClock.Worker.start_link(arg)
         # {SuperbirdClock.Worker, arg},
-      {Scenic, [scenic_viewport_config]}
+        {Scenic, [scenic_viewport_config]}
       ] ++ children(Nerves.Runtime.mix_target())
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -34,10 +36,33 @@ defmodule SuperbirdClock.Application do
   end
 
   defp children(_target) do
+    accessory_server = %HAP.AccessoryServer{
+      name: "Superbird Clock",
+      identifier: "11:22:33:44:55:66",
+      # Clock accessory type
+      accessory_type: 5,
+      accessories: [
+        %HAP.Accessory{
+          name: "Superbird Clock",
+          services: [
+            %HAP.Services.LightBulb{
+              on: {Accessory, :on_off},
+              brightness: {Accessory, :brightness},
+              name: "Brightness"
+            }
+          ]
+        }
+      ]
+    }
+
+    # Children for all targets except host
+    # Starts a worker by calling: SuperbirdClock.Worker.start_link(arg)
+    # {SuperbirdClock.Worker, arg},
+    # {}
     [
-      # Children for all targets except host
-      # Starts a worker by calling: SuperbirdClock.Worker.start_link(arg)
-      # {SuperbirdClock.Worker, arg},
+      {HAP, accessory_server},
+      {Control, []},
+      {Buttons, []}
     ]
   end
 end

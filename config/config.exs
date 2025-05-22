@@ -23,7 +23,6 @@ config :scenic, :assets,
   module: SuperbirdClock.Assets,
   alias: []
 
-
 if Mix.target() == :host do
   import_config "host.exs"
 else

@@ -37,6 +37,12 @@ defmodule SuperbirdClock.MixProject do
       {:ring_logger, "~> 0.11.0"},
       {:toolshed, "~> 0.4.0"},
       {:scenic_clock, "~> 0.11.0"},
+      {:hap, "~> 0.6.0"},
+      {:scenic,
+       git: "https://github.com/ScenicFramework/scenic.git", branch: "main", override: true},
+      {:truetype_metrics, "~> 0.5", runtime: false},
+      {:ex_image_info, "~> 0.2.4", runtime: false},
+      {:dialyxir, "~> 1.1", only: :dev, runtime: false},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
@@ -46,7 +52,6 @@ defmodule SuperbirdClock.MixProject do
       # Dependencies for all targets except :host
       {:nerves_pack, "~> 0.7.1", targets: @all_targets},
       {:nerves_time_zones, "~> 0.3.2", targets: @all_targets},
-
       # Dependencies for specific targets
       # NOTE: It's generally low risk and recommended to follow minor version
       # bumps to Nerves systems. Since these include Linux kernel and Erlang
@@ -54,14 +59,10 @@ defmodule SuperbirdClock.MixProject do
       # changes to your application are needed.
       {:nerves_system_superbird,
        github: "ericr3r/nerves_system_superbird",
-       tag: "v1.30.0",
+       tag: "v1.31.0",
        runtime: false,
        targets: :superbird},
-      {:scenic,
-       git: "https://github.com/ScenicFramework/scenic.git", branch: "main", override: true},
-      {:truetype_metrics, "~> 0.5", runtime: false},
-      {:ex_image_info, "~> 0.2.4", runtime: false},
-      {:dialyxir, "~> 1.1", only: :dev, runtime: false}
+      {:nerves_motd, "~> 0.1.15", targets: :superbird}
     ]
   end
 
