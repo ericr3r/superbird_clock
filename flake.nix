@@ -7,9 +7,13 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+  }:
+    flake-utils.lib.eachDefaultSystem (
+      system: let
         pkgs = import nixpkgs {
           inherit system;
         };
@@ -32,7 +36,8 @@
           # atk
           # brotli
           # bzip2
-           cairo
+          cairo
+          fwup
           # coreutils
           # dbus
           # expat
@@ -87,14 +92,11 @@
           # zlib
           # zstd
         ];
-
         # Scenic User Environment
-      in
-      {
+      in {
         pkgs."aarch64-darwin".default = commonPkgs ++ supportPkgs;
 
-
-       # devShells.default = scenic.env;
+        # devShells.default = scenic.env;
       }
     );
 }
