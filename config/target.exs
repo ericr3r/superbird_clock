@@ -105,7 +105,7 @@ config :mdns_lite,
 config :superbird_clock, :viewport,
   name: :main_viewport,
   size: {400, 800},
-  default_scene: SuperbirdClock.Scene.Digital,
+  default_scene: {SuperbirdClock.Scene.Digital, [name: SuperbirdClock.Scene.Digital]},
   drivers: [
     [
       module: Scenic.Driver.Local,
