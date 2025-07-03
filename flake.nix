@@ -22,89 +22,81 @@
 
         erlang = pkgs.beam.interpreters.${erlangVersion};
         elixir = pkgs.beam.packages.${erlangVersion}.${elixirVersion};
+        elixir_ls = pkgs.beam.packages.${erlangVersion}.elixir-ls;
 
         commonPkgs = [
           elixir
           erlang
+          elixir_ls
+          pkgs.git
           pkgs.pkg-config
         ];
 
         supportPkgs = with pkgs; [
-          atk
-          brotli
-          bzip2
+          # atk
+          # brotli
+          # bzip2
           cairo
-          coreutils
-          dbus
-          expat
-          fontconfig
-          freetype
-          fribidi
-          gcc
-          gdk-pixbuf
-          glfw-wayland
-          glib
-          glib
-          graphite2
-          gtk3
-          harfbuzz
-          lerc
-          libGL
-          libdatrie
-          libdeflate
-          libepoxy
-          libffi
-          libjpeg
-          libmnl
-          libpng
-          libselinux
-          libsepol
-          libthai
-          libtiff
-          libtool
-          libwebp
-          libxkbcommon
-          pango
-          pcre2
-          pixman
-          util-linux
-          wayland
-          xorg.libX11
-          xorg.libXau
-          xorg.libXcomposite
-          xorg.libXcursor
-          xorg.libXdamage
-          xorg.libXdmcp
-          xorg.libXext
-          xorg.libXfixes
-          xorg.libXft
-          xorg.libXi
-          xorg.libXinerama
-          xorg.libXrandr
-          xorg.libXrender
-          xorg.libXtst
-          xorg.libxcb
-          xorg.xorgproto
-          zlib
-          zstd
+          fwup
+          # coreutils
+          # dbus
+          # expat
+          # fontconfig
+          # freetype
+          # fribidi
+          # gcc
+          # gdk-pixbuf
+          # glfw-wayland
+          # glib
+          # glib
+          # graphite2
+          # gtk3
+          # harfbuzz
+          # lerc
+          # libGL
+          # libdatrie
+          # libdeflate
+          # libepoxy
+          # libffi
+          # libjpeg
+          # libmnl
+          # libpng
+          # libselinux
+          # libsepol
+          # libthai
+          # libtiff
+          # libtool
+          # libwebp
+          # libxkbcommon
+          # pango
+          # pcre2
+          # pixman
+          # util-linux
+          # wayland
+          # xorg.libX11
+          # xorg.libXau
+          # xorg.libXcomposite
+          # xorg.libXcursor
+          # xorg.libXdamage
+          # xorg.libXdmcp
+          # xorg.libXext
+          # xorg.libXfixes
+          # xorg.libXft
+          # xorg.libXi
+          # xorg.libXinerama
+          # xorg.libXrandr
+          # xorg.libXrender
+          # xorg.libXtst
+          # xorg.libxcb
+          # xorg.xorgproto
+          # zlib
+          # zstd
         ];
-
         # Scenic User Environment
-        scenic = pkgs.buildFHSUserEnv {
-          name = "fhs-shell";
-          linkLibs = true;
-          extraOutputsToInstall = ["dev"];
-          targetPkgs = pkgs: commonPkgs ++ supportPkgs;
-          runScript = pkgs.writeScript "init.sh" ''
-            unset MIX_TARGET
-            export FHS=true
-            export SCENIC_LOCAL_TARGET=cairo-gtk
-            export PKG_CONFIG_PATH=${pkgs.xorg.xorgproto}/share/pkgconfig:/usr/lib/pkgconfig
-            exec zsh
-          '';
-        };
       in {
-        devShells.scenic = scenic.env;
+        pkgs."aarch64-darwin".default = commonPkgs ++ supportPkgs;
+
+        # devShells.default = scenic.env;
       }
     );
 }

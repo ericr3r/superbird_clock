@@ -22,8 +22,8 @@ config :nerves_runtime,
 
 config :superbird_clock, :viewport,
   name: :main_viewport,
-  size: {400, 800},
-  default_scene: SuperbirdClock.Scene.Digital,
+  size: {400, 400},
+  default_scene: SuperbirdClock.Scene.Brightness,
   drivers: [
     [
       module: Scenic.Driver.Local,
@@ -32,7 +32,12 @@ config :superbird_clock, :viewport,
     ]
   ],
   opts: [
-    rotate: :math.pi() / 2,
     pin: {200, 120},
-    translate: {200, 120}
+    translate: {0, 60}
+  ]
+
+config :resolve,
+  compile: true,
+  mappings: [
+    {SuperbirdClock.Display.Screen, SuperbirdClock.Scene.Brightness}
   ]

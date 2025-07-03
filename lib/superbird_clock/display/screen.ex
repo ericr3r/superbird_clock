@@ -19,15 +19,4 @@ defmodule SuperbirdClock.Display.Screen do
       get_brightness()
     end
   end
-
-  def dim(), do: set_brightness(get_brightness() - 10)
-
-  def brighten(), do: set_brightness(get_brightness() + 10)
-
-  def toggle(last_on_level) do
-    toggle(get_brightness(), last_on_level)
-  end
-
-  defp toggle(0, last), do: set_brightness(last)
-  defp toggle(_current, _), do: set_brightness(0)
 end

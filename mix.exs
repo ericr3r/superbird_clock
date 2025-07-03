@@ -43,6 +43,7 @@ defmodule SuperbirdClock.MixProject do
       {:truetype_metrics, "~> 0.5", runtime: false},
       {:ex_image_info, "~> 0.2.4", runtime: false},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},
+      {:resolve, "~> 1.0"},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
@@ -59,7 +60,7 @@ defmodule SuperbirdClock.MixProject do
       # changes to your application are needed.
       {:nerves_system_superbird,
        github: "ericr3r/nerves_system_superbird",
-       tag: "v1.31.0",
+       tag: "v1.31.1",
        runtime: false,
        targets: :superbird},
       {:nerves_motd, "~> 0.1.15", targets: :superbird}

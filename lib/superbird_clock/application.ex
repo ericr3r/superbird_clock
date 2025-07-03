@@ -31,14 +31,25 @@ defmodule SuperbirdClock.Application do
     [
       # Children that only run on the host
       # Starts a worker by calling: SuperbirdClock.Worker.start_link(arg)
-      # {SuperbirdClock.Worker, arg},
+      {HAP, accessory_server("22:33:44:55:66:77")},
+      {Control, []}
     ]
   end
 
   defp children(_target) do
-    accessory_server = %HAP.AccessoryServer{
+    # Children for all targets except host
+    [
+      {HAP, accessory_server("11:22:33:44:55:66")},
+      {Control, []},
+      # {HAP, accessory_server}
+      {Buttons, []}
+    ]
+  end
+
+  defp accessory_server(identifier) do
+    %HAP.AccessoryServer{
       name: "Superbird Clock",
-      identifier: "11:22:33:44:55:66",
+      identifier: identifier,
       # Clock accessory type
       accessory_type: 5,
       accessories: [
@@ -54,15 +65,5 @@ defmodule SuperbirdClock.Application do
         }
       ]
     }
-
-    # Children for all targets except host
-    # Starts a worker by calling: SuperbirdClock.Worker.start_link(arg)
-    # {SuperbirdClock.Worker, arg},
-    # {}
-    [
-      {HAP, accessory_server},
-      {Control, []},
-      {Buttons, []}
-    ]
   end
 end

@@ -105,7 +105,7 @@ config :mdns_lite,
 config :superbird_clock, :viewport,
   name: :main_viewport,
   size: {400, 800},
-  default_scene: SuperbirdClock.Scene.Digital,
+  default_scene: {SuperbirdClock.Scene.Digital, [name: SuperbirdClock.Scene.Digital]},
   drivers: [
     [
       module: Scenic.Driver.Local,
@@ -120,3 +120,6 @@ config :superbird_clock, :viewport,
   ]
 
 config :nerves_time_zones, default_time_zone: "America/Los_Angeles"
+
+config :resolve,
+  compile: true
