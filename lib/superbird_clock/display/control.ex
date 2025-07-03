@@ -63,6 +63,16 @@ defmodule SuperbirdClock.Display.Control do
   end
 
   @impl GenServer
+  def handle_call({:set_brightness, level, notify_change}, from, state) when level > 100 do
+    handle_call({:set_brightness, 100, notify_change}, from, state)
+  end
+
+  @impl GenServer
+  def handle_call({:set_brightness, level, notify_change}, from, state) when level < 0 do
+    handle_call({:set_brightness, 0, notify_change}, from, state)
+  end
+
+  @impl GenServer
   def handle_call({:set_brightness, level, notify_change}, _from, state) do
     Logger.debug("Set brightness #{level}")
     current = resolve(Screen).set_brightness(level)
@@ -82,7 +92,6 @@ defmodule SuperbirdClock.Display.Control do
 
   @impl GenServer
   def handle_call({:toggle, notify_change}, from, %{last_brightness: last_brightness} = state) do
-    Logger.debug("Toggle Last #{last_brightness}")
     current = resolve(Screen).get_brightness()
 
     case {current, last_brightness} do
