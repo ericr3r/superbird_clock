@@ -50,7 +50,7 @@ defmodule SuperbirdClock.Scene.Brightness do
     # Get the current graph from assigns and update it
     graph =
       scene.assigns.graph
-      |> Graph.modify(:brightness_text, &text(&1, "Brightness: #{brightness}"))
+      |> Graph.modify(:brightness_text, &text(&1, "#{brightness} %"))
 
     # Update the scene with the new state and graph
     scene =

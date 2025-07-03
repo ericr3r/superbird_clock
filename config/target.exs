@@ -120,3 +120,6 @@ config :superbird_clock, :viewport,
   ]
 
 config :nerves_time_zones, default_time_zone: "America/Los_Angeles"
+
+config :resolve,
+  compile: true

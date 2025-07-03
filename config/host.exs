@@ -35,3 +35,9 @@ config :superbird_clock, :viewport,
     pin: {200, 120},
     translate: {0, 60}
   ]
+
+config :resolve,
+  compile: true,
+  mappings: [
+    {SuperbirdClock.Display.Screen, SuperbirdClock.Scene.Brightness}
+  ]

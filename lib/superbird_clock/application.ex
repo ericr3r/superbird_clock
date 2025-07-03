@@ -32,6 +32,7 @@ defmodule SuperbirdClock.Application do
       # Children that only run on the host
       # Starts a worker by calling: SuperbirdClock.Worker.start_link(arg)
       # {SuperbirdClock.Worker, arg},
+      {Control, []}
     ]
   end
 
@@ -54,6 +55,7 @@ defmodule SuperbirdClock.Application do
         }
       ]
     }
+
     # accessory_server = %HAP.AccessoryServer{
     #   name: "Superbird Clock",
     #   identifier: "11:22:33:44:55:66",
