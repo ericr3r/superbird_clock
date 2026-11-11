@@ -11,7 +11,7 @@ defmodule SuperbirdClock.MixProject do
     [
       app: @app,
       version: @version,
-      elixir: "~> 1.17",
+      elixir: "~> 1.19",
       archives: [nerves_bootstrap: "~> 1.13"],
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -35,14 +35,14 @@ defmodule SuperbirdClock.MixProject do
       {:nerves, "~> 1.10", runtime: false},
       {:shoehorn, "~> 0.9.1"},
       {:ring_logger, "~> 0.11.0"},
-      {:toolshed, "~> 0.4.0"},
+      {:toolshed, "~> 0.5.0"},
       {:scenic_clock, "~> 0.11.0"},
-      {:hap, "~> 0.6.0"},
+      {:hap, "~> 0.7.0"},
       {:scenic,
        git: "https://github.com/ScenicFramework/scenic.git", branch: "main", override: true},
       {:truetype_metrics, "~> 0.5", runtime: false},
       {:ex_image_info, "~> 0.2.4", runtime: false},
-      {:dialyxir, "~> 1.1", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.4", only: :dev, runtime: false},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
@@ -59,7 +59,7 @@ defmodule SuperbirdClock.MixProject do
       # changes to your application are needed.
       {:nerves_system_superbird,
        github: "ericr3r/nerves_system_superbird",
-       tag: "v1.31.0",
+       tag: "v1.33.1",
        runtime: false,
        targets: :superbird},
       {:nerves_motd, "~> 0.1.15", targets: :superbird}
