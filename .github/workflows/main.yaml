@@ -21,8 +21,8 @@ jobs:
       - name: Setup beam
         uses: erlef/setup-beam@v1
         with:
-          otp-version: ${{ env.OTP-VERSION }}
-          elixir-version: ${{ env.ELIXIR-VERSION }}
+          otp-version: ${{ env.OTP_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
       - name: Install nerves_bootstrap
         run: |
           mix archive.install --force hex nerves_bootstrap ${{ env.NERVES_BOOTSTRAP_VERSION }}
@@ -47,4 +47,3 @@ jobs:
           file: deploy/artifacts/*
           file_glob: true
           tag: ${{ github.ref }}
-
