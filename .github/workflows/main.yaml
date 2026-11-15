@@ -3,9 +3,9 @@ on: [push]
 jobs:
   build:
     env:
-     OTP-VERSION: OTP-28.5.0.8
-     ELIXIR-VERSION: v1.19.7-otp-28
-     NERVES_BOOTSTRAP_VERSION:  1.13.0
+     OTP_VERSION: 29.1.2
+     ELIXIR_VERSION: 1.20.5-otp-29
+     NERVES_BOOTSTRAP_VERSION: 1.17.4
     runs-on: ubuntu-22.04
     outputs:
       version: ${{ steps.set_version.outputs.version }}
