@@ -18,6 +18,8 @@ config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
 
 config :nerves, source_date_epoch: "1726332723"
 
+config :nerves_runtime, startup_guard_enabled: true
+
 # should normally live in config.exs of the device app
 config :scenic, :assets,
   module: SuperbirdClock.Assets,
